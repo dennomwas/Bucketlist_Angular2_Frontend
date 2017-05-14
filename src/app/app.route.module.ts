@@ -3,14 +3,15 @@ import { NgModule } from '@angular/core';
 
 import { LoginComponent } from './accounts/login.component';
 import { BucketlistComponent } from './bucketlist/bucketlist.component';
-
+import { RegistrationComponent } from './accounts/registration.component';
 
 
 export const routes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'bucketlists', component: BucketlistComponent}
-
-];
+                                {path: '', redirectTo: 'login', pathMatch: 'full'},
+                                {path: 'login', component: LoginComponent},
+                                {path: 'register', component: RegistrationComponent},
+                                {path: 'bucketlists', component: BucketlistComponent}
+                              ];
 
 @NgModule({
   imports: [ RouterModule.forRoot(routes)],
@@ -20,5 +21,8 @@ export const routes: Routes = [
 
 export class AppRouteModule {}
 
-export const routingComponents = [BucketlistComponent, LoginComponent];
+export const routingComponents = [BucketlistComponent,
+                                  LoginComponent,
+                                  RegistrationComponent
+                                 ];
 
