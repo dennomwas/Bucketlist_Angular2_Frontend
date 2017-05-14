@@ -1,0 +1,32 @@
+<h4 xmlns="http://www.w3.org/1999/html">
+  {{title}}
+</h4>
+<div class="row">
+  <div class="col-md-1">Filter by:</div>
+  <div class="col-lg-4"><input type="text"
+   [(ngModel)]="filter"/> </div>
+</div>
+<div class="row">
+  <div class="col-md-1">Filtered by: {{filter}}</div>
+  <div class="table table-hover">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Date</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor='let bucket of buckets'>
+        <td>{{bucket.name}}</td>
+        <td>{{bucket.description}}</td>
+        <td>{{bucket.date}}</td>
+
+      </tr>
+    </tbody>
+  </div>
+
+</div>
+
+
+
