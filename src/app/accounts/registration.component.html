@@ -1,3 +1,27 @@
-<p>
-  registration works!
-</p>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class=".col-md-6 .col-md-offset-3">
+        <form class="form-signin">
+          <h5 class="form-signin-heading">{{ title }}</h5>
+
+          <label for="inputEmail" class="sr-only">Full Names</label>
+          <input type="email" id="fullname" class="form-control" placeholder="Full Name" required autofocus
+                 [(ngModel)]="fullname" name="fullname">
+
+          <label for="inputEmail" class="sr-only">Username</label>
+          <input type="email" id="inputEmail" class="form-control" placeholder="Username" required autofocus
+                 [(ngModel)]="username" name="username">
+
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="inputPassword" class="form-control" placeholder="Password" required
+                 [(ngModel)]="password" name="password" >
+
+
+          <button class="btn btn-sm btn-primary btn-block" type="submit" (click)="registration()">Register</button>
+        </form>
+      </div>
+    </div>
+  </div> <!-- /container -->
+</body>
+
