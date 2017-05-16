@@ -1,32 +1,163 @@
-<h4 xmlns="http://www.w3.org/1999/html">
-  {{title}}
-</h4>
-<div class="row">
-  <div class="col-md-1">Filter by:</div>
-  <div class="col-lg-4"><input type="text"
-   [(ngModel)]="filter"/> </div>
-</div>
-<div class="row">
-  <div class="col-md-1">Filtered by: {{filter}}</div>
-  <div class="table table-hover">
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Date</th>
-    </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor='let bucket of buckets'>
-        <td>{{bucket.name}}</td>
-        <td>{{bucket.description}}</td>
-        <td>{{bucket.date}}</td>
 
-      </tr>
-    </tbody>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed"
+              data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" routerLink="/bucketlists">Travel Diaries</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" data-toggle="modal" data-target="#addModal">Add Bucketlist</a></li>
+        <li><a routerLink="/bucketitems">Bucket Items</a></li>
+        <li><a href="#" (click)="logoutUser()">Log Out</a></li>
+      </ul>
+      <form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form>
+    </div>
   </div>
+</nav>
+<div class="row">
+  <div class="container-fluid .col-sm-4">
+    <div class="panel panel-primary .col-md-4 ">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{title}}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-4 col-md-3">
+            <ul class="list-group" *ngFor="let bucket of bucketlists">
+              <li class="list-group-item"><strong><p>{{bucket.bucket_id}}</p></strong>
+              <li class="list-group-item"><strong><p>{{bucket.bucket_name}}</p></strong>
 
+                <span class="pull-right glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+
+                <!-- Trigger the update modal with a button -->
+                <button type="button" class="btn btn-info btn-xs"
+                        data-toggle="modal"
+                        [attr.data-target]='"#" + bucket.bucket_id + bucket.bucket_name'>Update</button>
+
+                <!-- Trigger the delete modal with a button -->
+                <button type="button" class="btn btn-info btn-xs btn-danger"
+                        data-toggle="modal"
+                        [attr.data-target]='"#" + bucket.bucket_id'>Delete</button>
+              </li>
+
+              <!-- Modal to add bucket list -->
+
+              <div class="modal fade" id="addModal" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Add a Bucket</h4>
+                    </div>
+                    <div class="modal-body">
+
+                      <form class="form-horizontal">
+                        <div class="form-group">
+                          <label for="addbucket" class="col-sm-3 control-label">Bucket Name</label>
+                          <div class="col-sm-7">
+                            <input type="text" class="form-control" id="addbucket"
+                                   [(ngModel)]="nameToAdd" name="nameToAdd" placeholder="">
+                          </div>
+                        </div>
+                      </form>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary btn-xs" data-dismiss="modal"
+                              (click)="addBucketlist()">Add</button>
+                      <button type="button" class="btn btn-primary btn-xs" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+
+              <!-- Modal to update a bucketlist -->
+
+              <div class="modal fade" id="{{bucket.bucket_id + bucket.bucket_name}}" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Update a Bucket</h4>
+                    </div>
+                    <div class="modal-body">
+
+                      <form class="form-horizontal">
+                        <div class="form-group">
+                          <label for="updatebucket" class="col-sm-3 control-label">Bucket Name</label>
+                          <div class="col-sm-5">
+                            <input type="text" class="form-control" id="updatebucket"
+                                   [(ngModel)]="nameToUpdate" name="nameToUpdate" placeholder="">
+                          </div>
+                        </div>
+                      </form>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary btn-xs"  data-dismiss="modal"
+                              (click)="updateBucketlist(bucket.bucket_id)">Update</button>
+                        <button type="button" class="btn btn-xs" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Modal to delete a bucketlist -->
+
+              <div class="modal fade" id="{{bucket.bucket_id}}" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Delete a Bucket with id {{bucket.bucket_id}}</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>Are you sure you want to Delete <strong>{{bucket.bucket_name}}</strong></p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-xs btn-danger " data-dismiss="modal"
+                              (click)="deleteBucketList(bucket.bucket_id)">Delete</button>
+                      <button type="button" class="btn btn-xs" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<div class="container-fluid">
+  <div class="row">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+</body>
+
+
 
 
 
