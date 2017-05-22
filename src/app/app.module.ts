@@ -6,6 +6,10 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import {AppRouteModule, routingComponents} from './app.route.module';
 import {BucketlistService} from './bucketlist/bucketlist.service';
+import {LoginService } from './accounts/login.service';
+import {RegistrationService} from './accounts/registration.service';
+import {AuthGuard} from './authguard/auth.guard';
+import {BucketitemsService} from './bucketitems/bucketitems.service';
 
 
 @NgModule({
@@ -19,7 +23,13 @@ import {BucketlistService} from './bucketlist/bucketlist.service';
     HttpModule,
     AppRouteModule
   ],
-  providers: [BucketlistService],
+  providers: [BucketlistService,
+              BucketitemsService,
+              LoginService,
+              RegistrationService,
+              AuthGuard
+             ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }
