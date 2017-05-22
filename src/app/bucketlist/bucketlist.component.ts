@@ -15,35 +15,48 @@ import {Router} from '@angular/router';
 export class BucketlistComponent implements OnInit {
   title = 'Bucketlists';
   errorMessage: string;
-  bucketlists: IBucketlist[];
+  bucketlists: IBucketlist[] = [];
   nameToAdd: string;
   nameToUpdate: string;
-  // bucket_id: number;
+  nameToSearch: string;
+  nextPage: string;
+  previousPage: string;
 
 
-
-  constructor(private _bucketlistservice: BucketlistService, private _loginService: LoginService, private _router: Router) { }
+  constructor(private _bucketlistservice: BucketlistService,
+              private _loginService: LoginService,
+              private _router: Router) { }
 
   ngOnInit() {
     this.getBucketLists();
   }
   addBucketlist() {
-    this._bucketlistservice.addBucket(this.nameToAdd)
+  this._bucketlistservice.addBucket(this.nameToAdd)
+
       .subscribe(
         addBucket => {
-          this.bucketlists = addBucket;
-          this.getBucketLists();
-        }
-      );
+          if (addBucket) {
+            this.nameToAdd = '';
+            this.getBucketLists();
+          } else { this.errorMessage = 'Bucket exists!'; }
+        },
+        error => this.errorMessage = <any>error.json());
+
   }
-  getBucketLists() {
-    this._bucketlistservice.getAllBuckets()
+  getBucketLists(paginateUrl?: string) {
+    this._bucketlistservice.getAllBuckets(paginateUrl)
       .subscribe(
         bucketlists => {
-          this.bucketlists = bucketlists;
-          // console.log(this.bucketlists);
+          if (bucketlists) {
+            this.bucketlists = bucketlists.Results;
+            this.nextPage = bucketlists.next;
+            this.previousPage = bucketlists.previous;
+          } else {
+            this.errorMessage = 'You have no Bucket list! ';
+          }
         },
         error => this.errorMessage = <any>error);
+
   }
   deleteBucketList(id: number) {
     console.log(id);
@@ -65,9 +78,32 @@ export class BucketlistComponent implements OnInit {
         }
       );
   }
-
+  searchBucket() {
+    this._bucketlistservice.search(this.nameToSearch)
+      .subscribe(
+        search => {
+          if (search.length) {
+            this.bucketlists = search;
+          } else if (this.nameToSearch && !search.length) {
+            this.bucketlists = [];
+          } else {
+            this.getBucketLists();
+          }
+        });
+  }
   logoutUser() {
     this._loginService.logoutUser();
     this._router.navigate(['login']);
   }
+
+  goToNext() {
+   this.getBucketLists(this.nextPage);
+  }
+  goToPrevious() {
+   this.getBucketLists(this.previousPage);
+  }
+
 }
+
+
+
