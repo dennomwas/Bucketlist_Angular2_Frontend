@@ -1,7 +1,7 @@
 export interface IBucketItem {
-  itemId: number;
-  itemName: string;
+  item_id: number;
+  item_name: string;
   date_created: Date;
-  date_modifiied: Date;
+  date_modified: Date;
   status: boolean;
 }

@@ -1,3 +1,172 @@
-<p>
-  bucketitems works!
-</p>
+<body>
+<div class="row">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed"
+                  data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" routerLink="/bucketlists">Travel Diaries</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" data-toggle="modal" data-target="#addItemModal">Add Item</a></li>
+            <li><a routerLink="/bucketlists">Bucket Lists</a></li>
+            <li><a href="#" (click)="logoutUser()">Log Out</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+  <div class="row">
+    <div class="container .col-sm-4">
+      <div class="panel panel-default .col-md-4 ">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{title}}</h3>
+        </div>
+
+        <div class="alert alert-danger" role="alert"  *ngIf="errorMessage">
+          <p class="text-center"><strong>Oops... You have no items in this Bucket list !</strong></p>
+        </div>
+
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-4 col-md-3" *ngFor="let item of bucketItems">
+              <ul class="list-group">
+                <li class="list-group-item"><p>{{item.item_name}}</p></li>
+                <li class="list-group-item"><p>
+                  <span><strong><small>Completed : </small></strong></span>
+                  <span><code>{{ item.status }}</code></span></p>
+                </li>
+                <li class="list-group-item">
+                  <p><span><strong><small>Created : </small></strong></span>
+                  <span><small>{{ item.date_created | date : mediumDate }}</small></span></p>
+                  <p *ngIf="item.date_modified"><span><strong><small>Modified : </small></strong></span>
+                    <span><small>{{ item.date_modified | date: mediumDate }}</small></span></p>
+                </li>
+                <li class="list-group-item">
+                  <a href="#" data-toggle="modal" [attr.data-target]='"#"+ "updateitem" + item.item_id'>
+                    <span class=" text-right glyphicon glyphicon-pencil"></span></a>
+
+                  <a href="#" data-toggle="modal" [attr.data-target]='"#" + item.item_id'>
+                    <span class=" pull-right glyphicon glyphicon-trash"></span></a>
+                </li>
+
+
+                <!-- Modal to update a bucket item -->
+
+                <div class="modal fade" id="updateitem{{item.item_id}}" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Update an Item</h4>
+                      </div>
+                      <div class="modal-body">
+
+                        <form class="form-horizontal">
+                          <div class="form-group">
+                            <label for="updateitem" class="col-sm-3 control-label">Item Name</label>
+                            <div class="col-sm-5">
+                              <input type="text" class="form-control" id="updateitem"
+                                     [(ngModel)]="itemToUpdate" name="itemToUpdate"
+                                     placeholder="{{item.item_name}}" required>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="updateitem2" class="col-sm-3 control-label">Completed</label>
+                            <label class="radio-inline">
+                              <input type="checkbox" name="itemStatus" id="updateitem2" value="option1"
+                                     [(ngModel)]="itemStatus"> true
+                            </label>
+
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-xs"  data-dismiss="modal"
+                                (click)="updateBucketItem(item.item_id)">Update</button>
+                        <button type="button" class="btn btn-xs" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- Modal to delete a bucket item -->
+
+                <div class="modal fade" id="{{item.item_id}}" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Delete an Item</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p>Are you sure you want to Delete <strong>{{item.item_name}}</strong></p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-danger " data-dismiss="modal"
+                                (click)="deleteBucketItem(item.item_id)">Delete</button>
+                        <button type="button" class="btn btn-xs" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal to add bucket item -->
+
+  <div class="modal fade" id="addItemModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add an Item</h4>
+        </div>
+        <div class="modal-body">
+
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="additem" class="col-sm-3 control-label">Item Name</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control" id="additem"
+                       [(ngModel)]="itemToAdd" name="itemToAdd" placeholder="">
+              </div>
+            </div>
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-xs" data-dismiss="modal"
+                  (click)="addBucketItem(buckId)">Add</button>
+          <button type="button" class="btn btn-primary btn-xs" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+ </div>
+</body>
+
+
+
